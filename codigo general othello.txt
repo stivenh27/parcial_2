@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <chrono>   // Para poder usar chrono
+#include <thread>   // Para poder usar this_thread::sleep_for
+
+
+
+using namespace std;
+
+int bienvenida() {
+    // Nombre del archivo
+    string nombreArchivo = "bienvenido.txt";
+
+    // Crea un objeto ifstream para abrir el archivo
+    ifstream archivo(nombreArchivo);
+
+    // Verifica si el archivo se abrió correctamente
+    if (archivo.is_open()) {
+        //muestra el contenido del archivo línea por línea
+        string linea;
+        while (getline(archivo, linea)) {
+            cout << linea << endl;
+        }
+
+        // Cierra el archivo
+        archivo.close();
+    } else {
+        // Si el archivo no se pudo abrir, muestra un mensaje de error
+        cerr << "No se pudo abrir el archivo: " << nombreArchivo << endl;
+    }
+
+    return 0;
+}
+
+int delay(int retraso) {
+
+    int segundosDeRetraso = retraso;
+    this_thread::sleep_for(chrono::seconds(segundosDeRetraso));
+
+
+    return 0;
+}
+
+const int boardSize = 8;
+char board[boardSize][boardSize];
+
+void initializeBoard() {
+    for (int i = 0; i < boardSize; i++) {
+        for (int j = 0; j < boardSize; j++) {
+            board[i][j] = ' ';
+        }
+    }
+    board[3][3] = board[4][4] = 'X';
+    board[3][4] = board[4][3] = 'O';
+}
+
+void printBoard() {
+    cout << "  A B C D E F G H " << endl;
+    for (int i = 0; i < boardSize; i++) {
+        cout << i + 1 << " ";
+        for (int j = 0; j < boardSize; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    bienvenida();
+    delay(5);
+    initializeBoard();
+    printBoard();
+
+
+    return 0;
+}

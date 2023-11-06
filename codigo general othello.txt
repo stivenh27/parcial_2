@@ -4,13 +4,14 @@
 #include <string>
 #include <chrono>   // Para poder usar chrono
 #include <thread>   // Para poder usar this_thread::sleep_for
-
+#include <cstdlib> // para poder usra system
+#include <random>
 
 
 using namespace std;
 
 int bienvenida() {
-    // Nombre del archivo
+    // Nombre del archivo de la bienvenida
     string nombreArchivo = "bienvenido.txt";
 
     // Crea un objeto ifstream para abrir el archivo
@@ -18,7 +19,7 @@ int bienvenida() {
 
     // Verifica si el archivo se abrió correctamente
     if (archivo.is_open()) {
-        //muestra el contenido del archivo línea por línea
+        //muestra el contenido del archivo
         string linea;
         while (getline(archivo, linea)) {
             cout << linea << endl;
@@ -43,12 +44,12 @@ int delay(int retraso) {
     return 0;
 }
 
-const int boardSize = 8;
-char board[boardSize][boardSize];
+const int tamañotablero = 8;
+char board[tamañotablero][tamañotablero];
 
-void initializeBoard() {
-    for (int i = 0; i < boardSize; i++) {
-        for (int j = 0; j < boardSize; j++) {
+void tableroinicial() {
+    for (int i = 0; i < tamañotablero; i++) {
+        for (int j = 0; j < tamañotablero; j++) {
             board[i][j] = ' ';
         }
     }
@@ -56,23 +57,92 @@ void initializeBoard() {
     board[3][4] = board[4][3] = 'O';
 }
 
-void printBoard() {
+void mostrartablero() {
     cout << "  A B C D E F G H " << endl;
-    for (int i = 0; i < boardSize; i++) {
+    for (int i = 0; i < tamañotablero; i++) {
         cout << i + 1 << " ";
-        for (int j = 0; j < boardSize; j++) {
+        for (int j = 0; j < tamañotablero; j++) {
             cout << board[i][j] << " ";
         }
         cout << endl;
     }
 }
 
+
+// Función para simular un cambio de imagen
+void simularCambioDeImagen(int numlineasenblanco) {
+    for (int i = 0; i < numlineasenblanco; i++) {
+        cout << endl; // Imprime una línea en blanco
+    }
+}
+
+string jugador1() {
+    string nombre1;
+    cout << "jugador 1, ingrese su nombre: ";
+    cin >> nombre1;
+
+    return nombre1;
+}
+
+string jugador2() {
+    string nombre2;
+    cout << "jugador 2, ingrese su nombre: ";
+    cin >> nombre2;
+    
+    return nombre2;
+}
+
+
+int aleatorioEntre0y1() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> distribucion(0, 1);
+
+    return distribucion(gen);
+}
+
+string sorteoturnos(){
+    string primero;
+    string segundo;
+    string nombre1 = jugador1();
+    string nombre2 = jugador2();
+    int sorteo = aleatorioEntre0y1();
+    if (sorteo == 0){
+        primero = nombre1;
+        segundo = nombre2;
+    }
+    else{
+        primero = nombre2;
+        segundo = nombre1;
+    }
+    
+    delay(2);
+    simularCambioDeImagen(30);
+    
+    cout << "juega primero: " << primero << "(X)" << endl << "juega segundo: " << segundo << "(O)"<< endl;
+    return (primero, segundo);
+
+}
+
+void posiblesjugadas(){
+    vector<int> disponibles = {};
+    disponibles.push_back(3);
+}
+
+
 int main() {
     bienvenida();
-    delay(5);
-    initializeBoard();
-    printBoard();
-
+    delay(1);
+    tableroinicial();
+    mostrartablero();
+    delay(1);
+    simularCambioDeImagen(30);
+    sorteoturnos();
+    delay(1);
+    simularCambioDeImagen(30);
+    bienvenida();
+    mostrartablero();
+    posiblesjugadas();
 
     return 0;
 }

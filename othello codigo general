@@ -1,0 +1,178 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <chrono>   // Para poder usar chrono
+#include <thread>   // Para poder usar this_thread::sleep_for
+#include <cstdlib> // para poder usra system
+#include <random> // para el sorteo de primero y segundo
+#include <tuple> // para poder usar tuplas
+
+
+
+using namespace std;
+
+int bienvenida() {
+    // Nombre del archivo de la bienvenida
+    string nombreArchivo = "bienvenido.txt";
+
+    // Crea un objeto ifstream para abrir el archivo
+    ifstream archivo(nombreArchivo);
+
+    // Verifica si el archivo se abrió correctamente
+    if (archivo.is_open()) {
+        //muestra el contenido del archivo
+        string linea;
+        while (getline(archivo, linea)) {
+            cout << linea << endl;
+        }
+
+        // Cierra el archivo
+        archivo.close();
+    } else {
+        // Si el archivo no se pudo abrir, muestra un mensaje de error
+        cerr << "No se pudo abrir el archivo: " << nombreArchivo << endl;
+    }
+
+    return 0;
+}
+
+int delay(int retraso) {
+
+    int segundosDeRetraso = retraso;
+    this_thread::sleep_for(chrono::seconds(segundosDeRetraso));
+
+
+    return 0;
+}
+
+tuple<int, int, char> pedirmovimiento() {
+    int fila;
+    cout << "ingrese la fila que desea marcar: " << endl;
+    cin >> fila;
+    int columna;
+    cout << "ingrese la columna que desea marcar: " << endl;
+    cin >> columna;
+    char caracter;
+    cout << "ingrese el caracter que desea marcar: " << endl;
+    cin >> caracter;
+
+    return make_tuple(fila, columna, caracter);
+}
+
+const int tamtablero = 8;
+char tablero[tamtablero][tamtablero];
+
+void tableroinicial() {
+    for (int i = 0; i < tamtablero; i++) {
+        for (int j = 0; j < tamtablero; j++) {
+            tablero[i][j] = ' ';
+        }
+    }
+    tablero[3][3] = tablero[4][4] = 'X';
+    tablero[3][4] = tablero[4][3] = 'O';
+}
+
+void mostrartablero() {
+    cout << "  A B C D E F G H " << endl;
+    for (int i = 0; i < tamtablero; i++) {
+        cout << i + 1 << " ";
+        for (int j = 0; j < tamtablero; j++) {
+            cout << tablero[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void hacerjugada(int fila, int columna, char simbolo) {
+    if (fila >= 0 && fila < tamtablero && columna >= 0 && columna < tamtablero) {
+        tablero[fila][columna] = simbolo;
+    }
+}
+
+
+// Función para simular un cambio de imagen
+void simularCambioDeImagen(int numlineasenblanco) {
+    for (int i = 0; i < numlineasenblanco; i++) {
+        cout << endl; // Imprime una línea en blanco
+    }
+}
+
+string jugador1() {
+    string nombre1;
+    cout << "jugador 1, ingrese su nombre: ";
+    cin >> nombre1;
+
+    return nombre1;
+}
+
+string jugador2() {
+    string nombre2;
+    cout << "jugador 2, ingrese su nombre: ";
+    cin >> nombre2;
+    
+    return nombre2;
+}
+
+
+int aleatorioEntre0y1() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> distribucion(0, 1);
+
+    return distribucion(gen);
+}
+
+string sorteoturnos(){
+    string primero;
+    string segundo;
+    string nombre1 = jugador1();
+    string nombre2 = jugador2();
+    int sorteo = aleatorioEntre0y1();
+    if (sorteo == 0){
+        primero = nombre1;
+        segundo = nombre2;
+    }
+    else{
+        primero = nombre2;
+        segundo = nombre1;
+    }
+    
+    delay(2);
+    simularCambioDeImagen(30);
+    
+    cout << "juega primero: " << primero << "(X)" << endl << "juega segundo: " << segundo << "(O)"<< endl;
+    return (primero, segundo);
+
+}
+
+void posiblesjugadas(){
+    vector<int> disponibles = {};
+    disponibles.push_back(3);
+}
+
+
+
+int main() {
+    bienvenida();
+    delay(1);
+    tableroinicial();
+    mostrartablero();
+    delay(1);
+    simularCambioDeImagen(30);
+    sorteoturnos();
+    delay(2);
+    simularCambioDeImagen(30);
+    bienvenida();
+    mostrartablero();
+    tuple<int, int, char> movimiento = pedirmovimiento();
+    int fila = get<0>(movimiento);
+    int columna = get<1>(movimiento);
+    char simbolo = get<2>(movimiento);
+    posiblesjugadas();
+    hacerjugada(fila-1, columna-1, simbolo);
+    simularCambioDeImagen(30);
+    mostrartablero();
+
+    return 0;
+}
